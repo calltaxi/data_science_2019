@@ -1,0 +1,146 @@
+---
+title: "콜미 콜미"
+author: "강형구,지현주,윤예슬"
+
+date: "2019년 5월 2일"
+
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+## 목차
+
+     * 언어 및 도구와 데이터 분석 현황
+     
+     
+     * 향후 발전 계획
+
+
+
+## 언어 및 도구
+
+    * RStudio
+    
+    
+    * ggplot2를 이용한 시각화
+    
+##데이터 분석 시작
+   
+   
+   *데이터프레임 형성
+   
+   
+```{r dataframe}
+library(tidyverse)
+call_taxi_df <- read_csv("data/project_data_1.csv",
+                         col_types=cols(
+                           기준일 = col_character(),
+                           차량운행 = col_double(),
+                           희망건 = col_double(),
+                           탑승건 = col_double(),
+                           평균대기시간 = col_double(),
+                           평균요금 = col_double(),
+                           평균승차거리 = col_double()
+                           
+                        ))
+call_taxi_df
+
+```
+
+##데이터 기본 요약
+
+```{r summary}
+
+
+ncol(call_taxi_df) 
+
+nrow(call_taxi_df)
+
+summary(call_taxi_df)
+
+```
+
+##각 변수들의 상관관계 분석
+   
+   *ggpair를 이용한 상관관계 시각화
+   
+   
+```{r ggpair}
+
+library(GGally)
+
+call_taxi_df %>% 
+  select(차량운행,희망건,탑승건) %>% 
+  ggpairs()
+
+```
+
+
+
+
+##ggplot2 를 이용한 시각화 1
+
+ 
+   *희망건과 탑승건의 관계
+```{r ggplot1}
+library(gridExtra)
+주중=call_taxi_df %>% 
+  filter(차량운행>400) %>% 
+  ggplot(data = ,
+         mapping= aes(x=희망건,
+                      y=탑승건))+geom_point()
+주중 <- 주중 + geom_smooth(method = "lm",se = FALSE) + ggtitle("주중")
+
+주말=call_taxi_df %>% 
+  filter(차량운행<400) %>% 
+  ggplot(data = ,
+         mapping= aes(x=희망건,
+                      y=탑승건))+geom_point()
+주말 <- 주말 + geom_smooth(method = "lm",se = FALSE) + ggtitle("주말")
+
+grid.arrange(주중,주말,ncol=2)
+
+
+```
+
+
+  
+##ggplot2 를 이용한 시각화 2  
+  
+  
+   *차량 운행 수와 탑승건과의 관계
+   
+```{r ggplot2}
+library(gridExtra)
+
+주중=call_taxi_df %>% 
+  filter(차량운행>400) %>% 
+  ggplot(data = ,aes(탑승건,차량운행)) + 
+  geom_point() 
+주중 <- 주중 + geom_smooth(method = "lm",se = FALSE) + ggtitle("주중")
+
+주말=call_taxi_df %>% 
+  filter(차량운행<400) %>% 
+  ggplot(data = ,aes(탑승건,차량운행))+
+  geom_point()
+주말 <- 주말 + geom_smooth(method = "lm",se = FALSE) + ggtitle("주말")
+
+grid.arrange(주중,주말)
+
+```
+
+
+##향후 발전 방향
+
+   
+   *위치 데이터와 택시 이용량과의 상관관계
+
+   
+   *날씨 데이터와 택시 이용량과 관련된 데이터를 병합
+
+
+
